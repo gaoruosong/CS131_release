@@ -199,10 +199,26 @@ def normalized_cross_correlation(f, g):
 
     out = None
     ### YOUR CODE HERE
+
+    out = np.zeros(f.shape)
     
-    normalized_f = (f - np.mean(f)) / np.std(f)
+    # normalized_f = (f - np.mean(f)) / np.std(f)
     normalized_g = (g - np.mean(g)) / np.std(g)
-    out = cross_correlation(normalized_f, normalized_g)
+    # out = cross_correlation(normalized_f, normalized_g)
+
+    Hf, Wf = f.shape
+    Hg, Wg = g.shape
+    mid_height = int(Hg/2)
+    mid_width = int(Wg/2)
+    padded_image = zero_pad(f, mid_height, mid_width)
+
+    ## I want the mid point to match g[mid][mid]; so g[0][0] must match a-mid_height, b-mid_width.
+
+    for i in range(mid_height, Hf+mid_height):
+        for j in range(mid_width, Wf+mid_width):
+            patch = padded_image[i-mid_height:i+Hg-mid_height, j-mid_width:j+Wg-mid_width] ## important! slicing must be done in one step.
+            normalized_patch = (patch-np.mean(patch))/np.std(patch)
+            out[i-mid_height][j-mid_width] = np.sum(normalized_patch * g)
     
     ### END YOUR CODE
 
