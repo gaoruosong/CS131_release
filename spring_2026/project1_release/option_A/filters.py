@@ -127,7 +127,7 @@ def conv_fast(image, kernel):
     flipped_kernel = np.flip(kernel)
     for i in range(mid_height, Hi+mid_height):
         for j in range(mid_width, Wi+mid_width):
-            patch = padded_image[i-mid_height:i+mid_height+1][j-mid_width,j+mid_width+1]
+            patch = padded_image[i-mid_height:i+mid_height+1][j-mid_width:j+mid_width+1]
             out[i][j] = np.sum(patch * flipped_kernel)
             
     ### END YOUR CODE
@@ -201,7 +201,7 @@ def normalized_cross_correlation(f, g):
     ### YOUR CODE HERE
     
     normalized_f = (f - np.mean(f)) / np.std(f)
-    normalizeg_g = (g - np.mean(g)) / np.std(g)
+    normalized_g = (g - np.mean(g)) / np.std(g)
     out = cross_correlation(normalized_f, normalized_g)
     
     ### END YOUR CODE
