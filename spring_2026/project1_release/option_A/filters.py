@@ -194,7 +194,11 @@ def normalized_cross_correlation(f, g):
 
     out = None
     ### YOUR CODE HERE
-    pass
+    
+    normalized_f = (f - np.mean(f)) / np.std(f)
+    normalizeg_g = (g - np.mean(g)) / np.std(g)
+    out = cross_correlation(normalized_f, normalized_g)
+    
     ### END YOUR CODE
 
     return out
