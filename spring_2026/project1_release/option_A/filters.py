@@ -33,19 +33,21 @@ def conv_nested(image, kernel):
     ## f(i,j), i,j should range over Hi, Wi; output, also over H_i, W_i;
     ## real question is the range to sum. Should 
     ## zero-indexed, and odddimensions. How to do this? Well, 
-    ## you have to check if a-i in range [0,H_i) and b-j in range [0,H_j);
-    ## so we really want i in range [0,H_k) AND []  a >= i > a- H_i
-    ## so, start is 0 or a-h_i+1, whichever larger
+    ## you have to check if a-c-i in range [0,H_i) and b-d-j in range [0,H_j);
+    ## so we really want i in range [0,H_k) AND []  a-c >= i > a-c- H_i
+    ## so, start is 0 or a-c-h_i+1, whichever larger
     
     ### YOUR CODE HERE
 
     sum = 0
+    mid_height = (H_k-1)/2
+    mid_width = (W_k-1)/2
     for a in range(H_i):
         for b in range(W_i):
             sum = 0
-            for i in range(max(0, a-H_i+1), min(H_k, a+1)):
-                for j in range(max(0, b-W_i+1), min(W_k, b+1)):
-                    sum += H[i][j] * f[a-i][b-j]
+            for i in range(max(0, a-H_i-mid_height+1), min(H_k, a-mid_height+1)):
+                for j in range(max(0, b-W_i-mid_width+1), min(W_k, b-mid_width+1)):
+                    sum += H[i][j] * f[a-i-mid_height][b-j-mid_width]
             out[a][b] = sum
 
     ### END YOUR CODE
@@ -107,9 +109,22 @@ def conv_fast(image, kernel):
     Hi, Wi = image.shape
     Hk, Wk = kernel.shape
     out = np.zeros((Hi, Wi))
-
+    
+    ## so we want to pad the image. We probably want to pad with size Hk, Wk first. 
+    ## actually, is this the right padding? let us say we have a filter with size 2a+1, 2b+1.
+    ## 
+    ## then we may want to flip, and then do something like np.sum().
     ### YOUR CODE HERE
-    pass
+
+    mid_height = (H_k-1)/2
+    mid_width = (W_K-1)/2
+    padded_image = zero_pad(image, mid_height, mid_width)
+    flipped_kernel = np.flip(kernel)
+    for i in range(H_i):
+        for j in range(W_i):
+            patch = padded_image[i-mid_height:i+mid_height+1][j-mid_width,j+mid_width+1]
+            out[i][j] = np.sum(partch * flipped_kernel)
+            
     ### END YOUR CODE
 
     return out
@@ -129,7 +144,7 @@ def cross_correlation(f, g):
 
     out = None
     ### YOUR CODE HERE
-    pass
+    out = conv_fast(f, np.flip(g))
     ### END YOUR CODE
 
     return out
@@ -151,7 +166,11 @@ def zero_mean_cross_correlation(f, g):
 
     out = None
     ### YOUR CODE HERE
-    pass
+    
+    Hg, Wg = g.shape
+    mean = float(np.sum(g)) / float(Hg * Wg)
+    out = cross_correlation(f, g - np.full((Hg, Wg), mean))
+    
     ### END YOUR CODE
 
     return out
