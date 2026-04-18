@@ -52,7 +52,7 @@ def conv_nested(image, kernel):
             sum = 0
             for i in range(max(-mid_height, a-Hi+1), min(mid_height+1, a+1)):
                 for j in range(max(-mid_width, b-Wi+1), min(mid_width+1, b+1)):
-                    sum += kernel[i+mid_height][j+mid_height] * image[a-i][b-j]
+                    sum += kernel[i+mid_height][j+mid_width] * image[a-i][b-j]
             out[a][b] = sum
 
     ### END YOUR CODE
