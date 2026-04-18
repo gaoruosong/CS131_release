@@ -33,9 +33,14 @@ def conv_nested(image, kernel):
     ## f(i,j), i,j should range over Hi, Wi; output, also over H_i, W_i;
     ## real question is the range to sum. Should 
     ## zero-indexed, and odddimensions. How to do this? Well, 
-    ## you have to check if a-c-i in range [0,H_i) and b-d-j in range [0,H_j);
-    ## so we really want i in range [0,H_k) AND []  a-c >= i > a-c- H_i
-    ## so, start is 0 or a-c-h_i+1, whichever larger
+    
+    ## sum-wise, you want to take the sum f(a,b) times H[mid][mid]
+    ## so you take to add, yeah- you iterate though i, i from range -mid to mid+1, and H[mid+i][mid+j]f[a-i][a-j]
+    ## point being, you add the midpoint, not subtract it
+    ## alternatively, you try to align kernel's [0,0] with +mid, +mid, that works too
+
+    ## index range: -mid to mid+1, but also enforce 0 <= a-i < Hi, which is a >= i > a-H_i.
+    ## max at: Hi and mid+1.
     
     ### YOUR CODE HERE
 
@@ -45,9 +50,9 @@ def conv_nested(image, kernel):
     for a in range(Hi):
         for b in range(Wi):
             sum = 0
-            for i in range(max(0, a-Hi-mid_height+1), min(Hk, a-mid_height+1)):
-                for j in range(max(0, b-Wi-mid_width+1), min(Wk, b-mid_width+1)):
-                    sum += kernel[i][j] * image[a-i-mid_height][b-j-mid_width]
+            for i in range(max(-mid_height, a-Hi+1), min(mid_height+1, a+1)):
+                for j in range(max(-mid_width, b-Wi+1), min(mid_width+1, b+1)):
+                    sum += kernel[i+mid_height][j+mid_height] * image[a-i][b-j]
             out[a][b] = sum
 
     ### END YOUR CODE
