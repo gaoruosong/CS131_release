@@ -218,7 +218,7 @@ def normalized_cross_correlation(f, g):
         for j in range(mid_width, Wf+mid_width):
             patch = padded_image[i-mid_height:i+Hg-mid_height, j-mid_width:j+Wg-mid_width] ## important! slicing must be done in one step.
             normalized_patch = (patch-np.mean(patch))/np.std(patch)
-            out[i-mid_height][j-mid_width] = np.sum(normalized_patch * g)
+            out[i-mid_height][j-mid_width] = np.sum(normalized_patch * normalized_g)
     
     ### END YOUR CODE
 
