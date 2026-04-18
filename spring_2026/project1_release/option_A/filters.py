@@ -28,8 +28,26 @@ def conv_nested(image, kernel):
     Hk, Wk = kernel.shape
     out = np.zeros((Hi, Wi))
 
+
+    ## recall that the point is you take the sum \sum_{i,j} f(a-i,b-j) H(i,j)... f * H. f is image, H is filter... 
+    ## f(i,j), i,j should range over Hi, Wi; output, also over H_i, W_i;
+    ## real question is the range to sum. Should 
+    ## zero-indexed, and odddimensions. How to do this? Well, 
+    ## you have to check if a-i in range [0,H_i) and b-j in range [0,H_j);
+    ## so we really want i in range [0,H_k) AND []  a >= i > a- H_i
+    ## so, start is 0 or a-h_i+1, whichever larger
+    
     ### YOUR CODE HERE
-    pass
+
+    sum = 0
+    for a in range(H_i):
+        for b in range(W_i):
+            sum = 0
+            for i in range(max(0, a-H_i+1), min(H_k, a+1)):
+                for j in range(max(0, b-W_i+1), min(W_k, b+1)):
+                    sum += H[i][j] * f[a-i][b-j]
+            out[a][b] = sum
+
     ### END YOUR CODE
 
     return out
@@ -55,8 +73,14 @@ def zero_pad(image, pad_height, pad_width):
     H, W = image.shape
     out = None
 
+    ## we look at out[padded_height, padded_width], which is the beginning. It's an offset. 
     ### YOUR CODE HERE
-    pass
+    
+    out = np.zeros((H + 2*pad_height, W + 2*pad_width))
+    for i in range(H):
+        for j in range(W):
+            out[i + pad_height][j + pad_width] = image[i][j]
+    
     ### END YOUR CODE
     return out
 
