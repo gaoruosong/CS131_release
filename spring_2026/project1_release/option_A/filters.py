@@ -125,10 +125,10 @@ def conv_fast(image, kernel):
     mid_width = int((Wk-1)/2)
     padded_image = zero_pad(image, mid_height, mid_width)
     flipped_kernel = np.flip(kernel)
-    for i in range(Hi):
-        for j in range(Wi):
+    for i in range(mid_height, Hi+mid_height):
+        for j in range(mid_width, Wi+mid_width):
             patch = padded_image[i-mid_height:i+mid_height+1][j-mid_width,j+mid_width+1]
-            out[i][j] = np.sum(partch * flipped_kernel)
+            out[i][j] = np.sum(patch * flipped_kernel)
             
     ### END YOUR CODE
 
