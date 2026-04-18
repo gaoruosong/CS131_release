@@ -40,13 +40,13 @@ def conv_nested(image, kernel):
     ### YOUR CODE HERE
 
     sum = 0
-    mid_height = (H_k-1)/2
-    mid_width = (W_k-1)/2
-    for a in range(H_i):
-        for b in range(W_i):
+    mid_height = (Hk-1)/2
+    mid_width = (Wk-1)/2
+    for a in range(Hi):
+        for b in range(Wi):
             sum = 0
-            for i in range(max(0, a-H_i-mid_height+1), min(H_k, a-mid_height+1)):
-                for j in range(max(0, b-W_i-mid_width+1), min(W_k, b-mid_width+1)):
+            for i in range(max(0, a-Hi-mid_height+1), min(Hk, a-mid_height+1)):
+                for j in range(max(0, b-Wi-mid_width+1), min(Wk, b-mid_width+1)):
                     sum += H[i][j] * f[a-i-mid_height][b-j-mid_width]
             out[a][b] = sum
 
@@ -116,12 +116,12 @@ def conv_fast(image, kernel):
     ## then we may want to flip, and then do something like np.sum().
     ### YOUR CODE HERE
 
-    mid_height = (H_k-1)/2
-    mid_width = (W_K-1)/2
+    mid_height = (Hk-1)/2
+    mid_width = (Wk-1)/2
     padded_image = zero_pad(image, mid_height, mid_width)
     flipped_kernel = np.flip(kernel)
-    for i in range(H_i):
-        for j in range(W_i):
+    for i in range(Hi):
+        for j in range(Wi):
             patch = padded_image[i-mid_height:i+mid_height+1][j-mid_width,j+mid_width+1]
             out[i][j] = np.sum(partch * flipped_kernel)
             
