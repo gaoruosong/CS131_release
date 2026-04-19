@@ -208,8 +208,8 @@ def normalized_cross_correlation(f, g):
 
     Hf, Wf = f.shape
     Hg, Wg = g.shape
-    mid_height = int(Hg/2)
-    mid_width = int(Wg/2)
+    mid_height = Hg//2
+    mid_width = Wg//2
     padded_image = zero_pad(f, mid_height, mid_width)
 
     ## I want the mid point to match g[mid][mid]; so g[0][0] must match a-mid_height, b-mid_width.
